@@ -1,5 +1,6 @@
+import { axiosConfig } from "./axiosConfig";
 import clienteAxios from "./clienteAxios";
-import { axiosConfig } from "@/utils/axiosConfig";
+
 
 
 const config = axiosConfig();
