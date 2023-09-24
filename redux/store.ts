@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import AuthSlice from "./slices/AuthSlice";
+import formularioSlice from "./slices/formularioSlice";
+
 
 
 
 const store = configureStore({
   reducer: {
-    auth:AuthSlice
+    formulario:formularioSlice
   },
 });
 export default store;

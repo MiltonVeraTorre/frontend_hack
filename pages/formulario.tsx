@@ -1,13 +1,9 @@
+import OpcionObjetivo from "@/components/formulario/OpcionObjetivo";
 import FormularioLayout from "@/layout/FormularioLayout";
 import React, { useState } from "react";
 
 export default function FormularioMultipaso() {
   const [paso, setPaso] = useState(1);
-  const [objetivo, setObjetivo] = useState("");
-  const [montoInicial, setMontoInicial] = useState("");
-  const [montoMensual, setMontoMensual] = useState("");
-  const [tiempoRetorno, setTiempoRetorno] = useState("");
-  const [toleranciaRiesgo, setToleranciaRiesgo] = useState("");
 
   const siguientePaso = () => {
     setPaso((prevPaso) => prevPaso + 1);
@@ -15,44 +11,64 @@ export default function FormularioMultipaso() {
 
   return (
     <FormularioLayout>
-      {paso === 1 && (
-        <Bienvenida siguientePaso={siguientePaso} />
-      )}
-      {paso === 2 && (
-        <div className="grid place-items-center">
-          <h3 className="text-xl font-bold text-gray-700">Comencemos! Cuentanos tus objetivos financieros (puedes seleccionar varias opciones)</h3>
-          
-        </div>
-      )}
+      {paso === 1 && <Bienvenida siguientePaso={siguientePaso} />}
+      {paso === 2 && <Objetivos siguientePaso={siguientePaso} />}
     </FormularioLayout>
   );
 }
 
-interface BienvenidaProps{
+interface SiguienteProps {
   siguientePaso: () => void;
 }
 
-function Bienvenida({siguientePaso}:BienvenidaProps){
+function Bienvenida({ siguientePaso }: SiguienteProps) {
   return (
-<div className="grid place-items-center">
-          <h3 className="text-4xl font-bold text-gray-700">Bienvenido</h3>
-          <p className="text-center mt-6 w-2/3 font-bold text-[#666666] text-lg">
-            Mi nombre es Ana, tu asesora financiera. Te voy a ayudar a encontrar
-            las mejores opciones de inversion en base a tus necesidades y
-            objetivos.
-          </p>
+    <div className="grid place-items-center">
+      <h3 className="text-4xl font-bold text-gray-700">Bienvenido</h3>
+      <p className="text-center mt-6 w-2/3 font-bold text-[#666666] text-lg">
+        Mi nombre es Ana, tu asesora financiera. Te voy a ayudar a encontrar las
+        mejores opciones de inversion en base a tus necesidades y objetivos.
+      </p>
 
-          <button
-            type="button"
-            className="bg-red-700 px-4 py-2 rounded-md text-gray-50 font-bold text-xl mt-10"
-            onClick={() => {
-              siguientePaso();
-            }}
-          >
-            Comenzar
-          </button>
-        </div>
-  )
+      <button
+        type="button"
+        className="bg-red-700 px-4 py-2 rounded-md text-gray-50 font-bold text-xl mt-10"
+        onClick={() => {
+          siguientePaso();
+        }}
+      >
+        Comenzar
+      </button>
+    </div>
+  );
+}
+
+function Objetivos({ siguientePaso }: SiguienteProps) {
+  return (
+    <div className="grid place-items-center">
+      <h3 className="text-xl text-justify w-5/6 font-bold text-gray-700">
+        Comencemos! Cuentanos tus objetivos financieros (puedes seleccionar
+        varias opciones)
+      </h3>
+      <div className="w-[90%] grid place-items-center gap-3">
+          <OpcionObjetivo 
+            icon="fa-solid fa-suitcase-medical"
+            titulo="Tener un fondo de emergencia"
+            descripcion="Tener un respaldo para imprevistas"
+          />
+          <OpcionObjetivo 
+            icon="fa-solid fa-money-bill"
+            titulo="Construir mi patrimonio"
+            descripcion="Crecer mi ahorro para comprar una casa, etc."
+          />
+          <OpcionObjetivo 
+            icon="fa-solid fa-person-walking-with-cane"
+            titulo="Invertir para mi retiro"
+            descripcion="Mantener un buen estilo de vida para el futuro"
+          />
+      </div>
+    </div>
+  );
 }
 
 // function codigo(){

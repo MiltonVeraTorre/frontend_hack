@@ -15,3 +15,30 @@ export interface Fondo{
     comision:number
     rendimiento:number
   }
+
+export interface Estrategia{
+  id:number
+  nombre:string
+  monto_inicial:number
+  monto_mensual:number
+  tiempo_retorno:number
+  rendimiento_anual:number
+  riesgo:string
+  aceptado:boolean
+  ponderacion:Ponderacion[]
+  grafica:Grafica[]
+}
+
+export interface Grafica{
+  id:number
+  label:number
+  value:number
+  estrategiaId:number
+}
+
+export interface Ponderacion{
+  id:number
+  fondoId:number
+  estrategiaId:number
+  ponderacion:number
+}
