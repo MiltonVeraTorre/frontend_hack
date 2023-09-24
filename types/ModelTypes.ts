@@ -26,10 +26,10 @@ export interface Estrategia{
   riesgo:string
   aceptado:boolean
   ponderacion:Ponderacion[]
-  grafica:Grafica[]
+  grafica:GraficaInt[]
 }
 
-export interface Grafica{
+export interface GraficaInt{
   id:number
   label:number
   value:number
