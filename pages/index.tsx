@@ -1,7 +1,7 @@
 import { axiosConfig } from '@/config/axiosConfig'
 import clienteAxios from '@/config/clienteAxios'
 import { fetcher } from '@/config/fetcher'
-import { handleError } from '@/utils/errorHandler'
+
 import React, { useEffect } from 'react'
 
 import useSWR from "swr"
