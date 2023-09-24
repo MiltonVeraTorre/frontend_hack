@@ -1,3 +1,4 @@
+import Estrategia from '@/components/Estrategia'
 import { axiosConfig } from '@/config/axiosConfig'
 import clienteAxios from '@/config/clienteAxios'
 import { fetcher } from '@/config/fetcher'
@@ -13,13 +14,7 @@ export default function index() {
 
   return (
     <div>
-      <button
-        type='button'
-        className='bg-slate-800 p-4 text-slate-50 rounded font-bold text-xl '
-        
-      >
-        Accion
-      </button>
+      <Estrategia />
 
     </div>
   )
