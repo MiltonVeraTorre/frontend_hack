@@ -1,27 +1,52 @@
+import BotonSiguiente from "@/components/formulario/BotonSiguiente";
+import InputDinero from "@/components/formulario/InputDinero";
 import OpcionObjetivo from "@/components/formulario/OpcionObjetivo";
+import OpcionRiesgo from "@/components/formulario/OpcionRiesgo";
+import RetornoInversionInput from "@/components/formulario/RetornoInversionInput";
 import FormularioLayout from "@/layout/FormularioLayout";
-import React, { useState } from "react";
+import {
+  setMontoInicial,
+  setMontoMensual,
+  siguientePaso,
+} from "@/redux/slices/formularioSlice";
+import { RootState } from "@/redux/store";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import PantallaCarga from "@/components/formulario/PantallaCarga";
+import { crearPropuestas } from "@/redux/thunks/formularioThunks";
+import { useRouter } from "next/router";
 
 export default function FormularioMultipaso() {
-  const [paso, setPaso] = useState(1);
+  const paso = useSelector((state: RootState) => state.formulario.paso);
+  const cargando = useSelector((state: RootState) => state.formulario.cargando);
+  const estrategias = useSelector((state: RootState) => state.formulario.estrategias);
 
-  const siguientePaso = () => {
-    setPaso((prevPaso) => prevPaso + 1);
-  };
+  const router = useRouter()
 
-  return (
+  useEffect(()=>{
+    if(estrategias.length > 0 ){
+      router.push('/propuestas')
+    }
+  },[estrategias])
+
+  return cargando ? (
+    <PantallaCarga />
+  ) : (
     <FormularioLayout>
-      {paso === 1 && <Bienvenida siguientePaso={siguientePaso} />}
-      {paso === 2 && <Objetivos siguientePaso={siguientePaso} />}
+      {paso === 1 && <Bienvenida />}
+      {paso === 2 && <Objetivos />}
+      {paso === 3 && <MontoInicial />}
+      {paso === 4 && <MontoMensual />}
+      {paso === 5 && <RetornoInversion />}
+      {paso === 6 && <PreguntaRiesgo />}
     </FormularioLayout>
   );
 }
 
-interface SiguienteProps {
-  siguientePaso: () => void;
-}
+function Bienvenida() {
+  const dispatch = useDispatch();
 
-function Bienvenida({ siguientePaso }: SiguienteProps) {
   return (
     <div className="grid place-items-center">
       <h3 className="text-4xl font-bold text-gray-700">Bienvenido</h3>
@@ -34,7 +59,7 @@ function Bienvenida({ siguientePaso }: SiguienteProps) {
         type="button"
         className="bg-red-700 px-4 py-2 rounded-md text-gray-50 font-bold text-xl mt-10"
         onClick={() => {
-          siguientePaso();
+          dispatch(siguientePaso());
         }}
       >
         Comenzar
@@ -43,29 +68,146 @@ function Bienvenida({ siguientePaso }: SiguienteProps) {
   );
 }
 
-function Objetivos({ siguientePaso }: SiguienteProps) {
+function Objetivos() {
   return (
     <div className="grid place-items-center">
       <h3 className="text-xl text-justify w-5/6 font-bold text-gray-700">
         Comencemos! Cuentanos tus objetivos financieros (puedes seleccionar
         varias opciones)
       </h3>
-      <div className="w-[90%] grid place-items-center gap-3">
-          <OpcionObjetivo 
-            icon="fa-solid fa-suitcase-medical"
-            titulo="Tener un fondo de emergencia"
-            descripcion="Tener un respaldo para imprevistas"
-          />
-          <OpcionObjetivo 
-            icon="fa-solid fa-money-bill"
-            titulo="Construir mi patrimonio"
-            descripcion="Crecer mi ahorro para comprar una casa, etc."
-          />
-          <OpcionObjetivo 
-            icon="fa-solid fa-person-walking-with-cane"
-            titulo="Invertir para mi retiro"
-            descripcion="Mantener un buen estilo de vida para el futuro"
-          />
+      <div className="w-[90%] grid place-items-center gap-3 mt-4">
+        <OpcionObjetivo
+          icon="fa-solid fa-suitcase-medical"
+          titulo="Tener un fondo de emergencia"
+          descripcion="Tener un respaldo para imprevistas"
+        />
+        <OpcionObjetivo
+          icon="fa-solid fa-money-bill"
+          titulo="Construir mi patrimonio"
+          descripcion="Crecer mi ahorro para comprar una casa, etc."
+        />
+        <OpcionObjetivo
+          icon="fa-solid fa-person-walking-with-cane"
+          titulo="Invertir para mi retiro"
+          descripcion="Mantener un buen estilo de vida para el futuro"
+        />
+      </div>
+      <div className="w-full grid place-items-center my-7">
+        <BotonSiguiente />
+      </div>
+    </div>
+  );
+}
+
+function MontoInicial() {
+  const montoInicial = useSelector(
+    (state: RootState) => state.formulario.monto_inicial
+  );
+
+  const dispatch = useDispatch();
+
+  return (
+    <div className="grid place-items-center">
+      <h3 className="text-xl text-justify w-5/6 font-bold text-gray-700">
+        Con cuanto dinero quieres comenzar a invertir (monto inicial)?
+      </h3>
+      <div className="w-5/6 mt-10">
+        <InputDinero
+          value={montoInicial}
+          onChange={(e) => {
+            dispatch(setMontoInicial(+e.target.value));
+          }}
+        />
+      </div>
+      <div className="w-full grid place-items-center my-7">
+        <BotonSiguiente />
+      </div>
+    </div>
+  );
+}
+function MontoMensual() {
+  const montoMensual = useSelector(
+    (state: RootState) => state.formulario.monto_mensual
+  );
+
+  const dispatch = useDispatch();
+
+  return (
+    <div className="grid place-items-center">
+      <h3 className="text-xl text-justify w-5/6 font-bold text-gray-700">
+        Cual es el monto mensual de inversion que estas dispuesto a hacer?
+      </h3>
+      <div className="w-5/6 mt-10">
+        <InputDinero
+          value={montoMensual}
+          onChange={(e) => {
+            dispatch(setMontoMensual(+e.target.value));
+          }}
+        />
+      </div>
+      <div className="w-full grid place-items-center my-7">
+        <BotonSiguiente />
+      </div>
+    </div>
+  );
+}
+
+function RetornoInversion() {
+  return (
+    <div className="grid place-items-center">
+      <h3 className="text-xl text-justify w-5/6 font-bold text-gray-700">
+        Cual es tu tiempo de retorno esperado sobre tu inversion?
+      </h3>
+      <div className="w-full grid place-items-center mt-6">
+        <RetornoInversionInput />
+      </div>
+
+      <div className="w-full grid place-items-center mt-5">
+        <BotonSiguiente />
+      </div>
+    </div>
+  );
+}
+
+function PreguntaRiesgo() {
+  const dispatch = useDispatch<any>();
+
+  return (
+    <div className="grid place-items-center">
+      <h3 className="text-xl text-justify w-5/6 font-bold text-gray-700">
+        Cuanto riesgo estas dipuest@ a tomar?
+      </h3>
+      <div className="w-[90%] grid place-items-center gap-3 mt-4">
+        <OpcionRiesgo
+          titulo="Bajo"
+          descripcion="Prefiero no tener perdidas, aunque mi ganancia no sea
+          tan alta "
+          value={1}
+        />
+        <OpcionRiesgo
+          titulo="Medio"
+          descripcion="Acepto perdidas no tan grandes, siempre y cuando
+          obtenga mejores rendimientos a largo plazo"
+          value={3}
+        />
+        <OpcionRiesgo
+          titulo="Alto"
+          descripcion="Acepto cambios negativos en el valor de mis inversiones, 
+          siempre y cuando estas se recuperen y terminen generando un mejor rendimiento"
+          value={5}
+        />
+      </div>
+      <div className="w-full grid place-items-center my-7">
+        <button
+          type="button"
+          className="bg-gray-500 text-gray-50 px-4 py-2 rounded-md text-white-50 font-bold text-xl flex items-center gap-3"
+          onClick={() => {
+            dispatch(crearPropuestas());
+          }}
+        >
+          <p>Comenzar</p>
+          <i className="fa-solid fa-check text-gray-50"></i>
+        </button>
       </div>
     </div>
   );
