@@ -1,7 +1,7 @@
 import { pasoAnterior, siguientePaso } from "@/redux/slices/formularioSlice";
 import { RootState } from "@/redux/store";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
@@ -10,6 +10,30 @@ interface Props {
 
 export default function FormularioLayout({ children }: Props) {
   const paso = useSelector((state: RootState) => state.formulario.paso);
+
+  const videoRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play()
+        .catch((error:any) => {
+          console.log('Auto-play was prevented:', error);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      // Carga el nuevo video
+      videoRef.current.load();
+  
+      // Intenta reproducir el video
+      videoRef.current.play()
+        .catch((error:any) => {
+          console.log('Auto-play was prevented:', error);
+        });
+    }
+  }, [paso]);
 
   const dispatch = useDispatch();
 
@@ -24,13 +48,17 @@ export default function FormularioLayout({ children }: Props) {
               onClick={() => dispatch(pasoAnterior())}
             ></button>
           )}
-          <Image
-            className="w-full mt-14 -mb-24"
-            src="/imagen.png"
-            alt="Picture of the author"
-            width={300}
-            height={500}
-          />
+          
+
+          
+          <video 
+          ref={videoRef}
+          className="w-full mt-14 -mb-24 rounded-full"
+           width="300" height="500" autoPlay controls>
+            
+          <source src={`/videos/${paso}.mp4`} type="video/mp4"/>
+
+        </video>
         </div>
       </div>
       <div className="bg-[#e7e0e0] h-[60vh] pt-6 overflow-y-auto">
