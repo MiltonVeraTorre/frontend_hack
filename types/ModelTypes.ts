@@ -16,7 +16,7 @@ export interface Fondo{
     rendimiento:number
   }
 
-export interface Estrategia{
+export interface EstrategiaInt{
   id:number
   nombre:string
   monto_inicial:number
@@ -38,6 +38,7 @@ export interface GraficaInt{
 
 export interface Ponderacion{
   id:number
+  fondo:Fondo
   fondoId:number
   estrategiaId:number
   ponderacion:number

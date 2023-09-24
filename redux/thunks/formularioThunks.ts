@@ -32,3 +32,24 @@ export const crearPropuestas =  createAsyncThunk(
 
     }
 )
+
+
+export const seleccionarPropuesta = createAsyncThunk(
+    "formulario/seleccionarPropuesta",
+    async (id:number) => {
+
+
+        try {
+            const config = axiosConfig()
+            if(!config){
+                throw new Error("Error de configuracion")
+            }
+            const {data} = await clienteAxios.post(`/estrategia/elegir/${id}`,{},config)
+
+            return data
+            
+        } catch (error:any) {
+             handleError(error)
+        }
+    }
+)

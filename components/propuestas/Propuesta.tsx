@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import Grafica from "../graphs/Grafica";
-import { Estrategia, GraficaInt } from "@/types/ModelTypes";
+
 import { EstrategiaInt, FondoInt } from "@/types/AppTypes";
+import { useDispatch } from "react-redux";
+import { seleccionarPropuesta } from "@/redux/thunks/formularioThunks";
+import { useRouter } from "next/router";
 
 interface Props {
   propuesta: EstrategiaInt;
@@ -9,6 +12,9 @@ interface Props {
 
 export default function Propuesta({ propuesta }: Props) {
   const [fondoActual, setFondoActual] = useState<null | FondoInt>(null);
+
+  const router = useRouter()
+  const dispatch = useDispatch()
 
   return (
     <div className="bg-gray-50 w-full p-4 rounded-lg">
@@ -72,6 +78,9 @@ export default function Propuesta({ propuesta }: Props) {
         <button
           type="button"
           className="bg-[#736060] text-gray-50 rounded-md px-4 py-2 font-bold my-3"
+          onClick={()=>{
+            router.push("/")
+          }}
         >
           Seleccionar
         </button>
